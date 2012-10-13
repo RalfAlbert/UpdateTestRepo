@@ -1,6 +1,7 @@
 .project
 .buildpath
 .settings
+.gitignore
 .htaccess
 wp-*.php
 xmlrpc.php
