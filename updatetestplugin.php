@@ -3,7 +3,7 @@
 Plugin Name: WP Github Plugin Updater Test
 Plugin URI: https://github.com/RalfALbert/WordPress-GitHub-Plugin-Updater
 Description: Test for the Github Plugin Updater
-Version: 0.1
+Version: 0.2
 Author: Ralf Albert
 Author URI: http://yoda.neun12.de/
 License: GPLv2
