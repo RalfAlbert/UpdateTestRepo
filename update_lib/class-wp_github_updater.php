@@ -461,6 +461,11 @@ class WP_GitHub_Updater
 
 	}
 
+	public function get_rate_limit(){
+
+		return $this->handler->check_rate_limit( TRUE );
+
+	}
 }
 
 }; // endif class exists

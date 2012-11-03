@@ -100,6 +100,10 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 	 */
 	public $method = 'commit-message';
 
+	public static $api_calls_remaining = 0;
+
+	public static $api_calls_ratelimit = 0;
+
 	/**
 	 * Valid places to search for the version
 	 * @var array
@@ -423,7 +427,7 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 	 * Checking if the rate limit is exceeded
 	 * @return	boolean		anonymous	True if the rate limit is not exceeded, else false.
 	 */
-	protected function check_rate_limit(){
+	public function check_rate_limit( $echo = FALSE ){
 
 		// check rate-limiting (per IP)
 		$raw_response = wp_remote_get( $this->api_urls['ratelimit'], array( 'sslverify' => $this->sslverify ) );
@@ -440,10 +444,10 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 
 			$headers = &$raw_response['headers'];
 
-			$remaining = $headers['x-ratelimit-remaining'];
-			$ratelimit = $headers['x-ratelimit-limit'];
+			self::$api_calls_remaining = $headers['x-ratelimit-remaining'];
+			self::$api_calls_ratelimit = $headers['x-ratelimit-limit'];
 
-			if( 0 >= $remaining ){
+			if( 0 >= self::$api_calls_remaining ){
 
 				$this->error = TRUE;
 				$this->set_error( 'warning', sprintf( __( 'Rate limit of %d api-calls is exceeded.', self::LANG ), $ratelimit ) );
@@ -453,7 +457,7 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 
 		}
 
-		return TRUE;
+		return ( FALSE !== $echo ) ? sprintf( '%d out of %d api calls remaining.', self::$api_calls_remaining, self::$api_calls_ratelimit ) : TRUE;
 
 	}
 
