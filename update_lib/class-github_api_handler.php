@@ -235,7 +235,7 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 	 * @return	string	$version	Version string
 	 */
 	public function get_version(){
-var_dump( $this->method );
+
 		switch( $this->method ){
 
 			case 'commit-message':
