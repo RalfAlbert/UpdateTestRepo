@@ -198,8 +198,8 @@ class WP_GitHub_Updater
 	 */
 	protected function init_handler( $config ){
 
-		if( ! isset( $config['handler'] ) || ! is_array( $config['handler'] ) )
-			$config['handler'] = array();
+		if( ! isset( $config['handler_config'] ) || ! is_array( $config['handler_config'] ) )
+			$config['handler_config'] = array();
 
 		//TODO: Handler-Switch / Handler-Factory
 
@@ -208,7 +208,7 @@ class WP_GitHub_Updater
 
 		$this->handler = new GitHub_Api_Handler();
 
-		$handler_config = wp_parse_args( $config['handler'], $this->handler->config );
+		$handler_config = wp_parse_args( $config['handler_config'], $this->handler->config );
 
 		$this->handler->setup( $config['user'], $config['repo'], $handler_config );
 
@@ -281,10 +281,8 @@ class WP_GitHub_Updater
 
 		delete_site_transient( 'update_plugins' );
 		delete_site_transient( $this->slug . '_new_version' );
-		delete_site_transient( $this->slug . '_repo_data' );
+//		delete_site_transient( $this->slug . '_repo_data' );
 		delete_site_transient( $this->slug . '_changelog' );
-
-		delete_site_transient( $this->slug . '_github_data' );
 
 	}
 
@@ -296,20 +294,24 @@ class WP_GitHub_Updater
 	 */
 	public function get_repo_data(){
 
-		$repo_data = get_site_transient( $this->slug.'_repo_data' );
+		$repo_data = $this->handler->get_repo_data();
 
-		if( ! isset( $repo_data ) || empty( $repo_data ) ){
+		return ( empty( $repo_data ) ) ? FALSE : $repo_data;
 
-			$repo_data = $this->handler->get_repo_data();
+// 		$repo_data = get_site_transient( $this->slug.'_repo_data' );
 
-			if( empty( $repo_data) )
-				return FALSE;
+// 		if( ! isset( $repo_data ) || empty( $repo_data ) ){
 
-			// refresh every 6 hours
-			set_site_transient( $this->slug.'_repo_data', $repo_data, 60*60*6 );
-		}
+// 			$repo_data = $this->handler->get_repo_data();
 
-		return $repo_data;
+// 			if( empty( $repo_data) )
+// 				return FALSE;
+
+// 			// refresh every 6 hours
+// 			set_site_transient( $this->slug.'_repo_data', $repo_data, self::HOUR );
+// 		}
+
+// 		return $repo_data;
 
 	}
 

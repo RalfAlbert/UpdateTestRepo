@@ -25,6 +25,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+// force update
+define( 'WP_GITHUB_FORCE_UPDATE', TRUE );
+
 add_action( 'init', 'github_plugin_updater_test_init', 10, 0 );
 
 add_action( 'plugins_loaded', 'GitHubUpdaterTest_DebugOutput', 10, 0 );
@@ -34,8 +37,6 @@ function github_plugin_updater_test_init() {
 	global $githubupdater;
 
 	require_once 'update_lib/class-wp_github_updater.php';
-
-	define( 'WP_GITHUB_FORCE_UPDATE', TRUE );
 
 	if( is_admin() ){
 

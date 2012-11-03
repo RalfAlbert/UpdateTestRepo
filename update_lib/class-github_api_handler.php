@@ -146,7 +146,7 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 		$this->user = (string) $user;
 		$this->repo = (string) $repo;
 
-		$this->init( $config );
+		$this->_init_handler( $config );
 
 		return TRUE;
 
@@ -156,7 +156,7 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 	 * Initialize and setup the class-vars
 	 * @param	array	$config	Configuration
 	 */
-	protected function init( $config = array() ){
+	protected function _init_handler( $config = array() ){
 
 		// setup configuration defaults
 		$config = wp_parse_args( $config, $this->config );
@@ -183,8 +183,10 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 
 		// See Downloading a zipball (private repo) https://help.github.com/articles/downloading-files-from-the-command-line
 		if( ! empty( $this->access_token ) ){
+
 			$this->api_urls['apiurl'] = add_query_arg( array( 'access_token' => $this->access_token ), $this->api_urls['apiurl'] );
 			$this->api_urls['zipurl'] = add_query_arg( array( 'access_token' => $this->access_token ), $this->api_urls['zipurl'] );
+
 		}
 
 		// fill the cache
@@ -351,6 +353,9 @@ class GitHub_Api_Handler extends WP_GitHub_Updater
 
 		$response = '';
 		$cache = array();
+
+		if( defined('WP_GITHUB_FORCE_UPDATE') && TRUE == WP_GITHUB_FORCE_UPDATE )
+			delete_site_transient( $this->slug . '_github_data' );
 
 		$cache = get_site_transient( $this->slug . '_github_data' );
 
